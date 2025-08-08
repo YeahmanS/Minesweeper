@@ -89,3 +89,8 @@ main{
   justify-content: center;
   align-items: center;
 }
+
+.box{
+    margin: 0;
+    padding: 0;
+}

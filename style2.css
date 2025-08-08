@@ -1,3 +1,8 @@
+@font-face {
+  font-family: digit;
+  src: url(assests/DS-DIGIB.TTF);
+}
+
 body{
     margin: 0;
     padding: 0;
@@ -10,12 +15,21 @@ body{
     background-color: #048384;
 }
 #window{
+    box-sizing: content-box;
     width: 184px;
     padding: 2px;
     background-color: #c0c0c0;
     display: flex;
     flex-direction: column;
+    /* justify-content: center;    
+    align-items: center; */
     gap: 2px;
+    
+    border-bottom: solid #797979 3px;
+    border-right: 3px solid #797979;
+    border-left: solid 3px #fffef7;
+    border-top: solid 3px #fffef7;
+
 }
 
 #bar{
@@ -82,7 +96,14 @@ body{
     border-right: 4px solid #797979;
     border-left: solid 4px #fffef7;
     border-top: solid 4px #fffef7;
-    padding:8px;}
+    padding:8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    justify-content: center;
+    align-items: center ;
+}
+    
 
 #score-board{
     width: 152px;
@@ -115,3 +136,28 @@ body{
     border-top: solid 2px #fffef7;
 }
 
+#flag-count,#time{
+    font-family: digit;
+    font-size: 30px;
+    color: red;
+    background-color: black;
+    border-bottom: solid #fffef7 3px;
+    border-right: 3px solid #fffef7;
+    border-left: solid 3px #797979;
+    border-top: solid 3px #797979;
+
+}
+
+#board{
+    display: grid;
+    grid-template-columns: repeat(9,16px);
+    grid-template-rows: repeat(9,16px);
+    width: 144px;
+    height: 144px;
+    margin-top: 4px;
+    background-color: grey;
+    border-top: 4px solid black;
+    border-left: 4px solid black;
+    border-right: 4px solid whitesmoke;
+    border-bottom: 4px solid whitesmoke;
+}
