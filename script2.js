@@ -2,15 +2,16 @@ const board = document.getElementById('board');
 const gameMatrix = Array.from({ length: 9 }, () => Array(9).fill(null));
 
 function makeMove(x,y){
+
     if(gameMatrix[x][y] === "M"){
         revealAllMines();
         const currBox = document.getElementById(`${x}-${y}-d`);
         currBox.removeChild(currBox.firstChild);
         const image = document.createElement('img');
         image.setAttribute('src', 'assests/TileExploded.png');
-        image.setAttribute('width', '100%');
-        image.setAttribute('height', '100%');
-        image.setAttribute('id', `${x}-${y}`);
+        // image.setAttribute('width', '100%');
+        // image.setAttribute('height', '100%');
+        // image.setAttribute('id', `${x}-${y}`);
         currBox.appendChild(image);
 
     } else {
@@ -21,9 +22,9 @@ function makeMove(x,y){
             currBox.removeChild(currBox.firstChild);
             const image = document.createElement('img');
             image.setAttribute('src', `assests/Tile${numberOfMines}.png`);
-            image.setAttribute('width', '100%');
-            image.setAttribute('height', '100%');
-            image.setAttribute('id', `${x}-${y}`);
+            // image.setAttribute('width', '100%');
+            // image.setAttribute('height', '100%');
+            // image.setAttribute('id', `${x}-${y}`);
             currBox.appendChild(image);
 
         } else {
@@ -31,9 +32,9 @@ function makeMove(x,y){
             currBox.removeChild(currBox.firstChild);
             const image = document.createElement('img');
             image.setAttribute('src', 'assests/TileEmpty.png');
-            image.setAttribute('width', '100%');
-            image.setAttribute('height', '100%');
-            image.setAttribute('id', `${x}-${y}`);
+            // image.setAttribute('width', '100%');
+            // image.setAttribute('height', '100%');
+            // image.setAttribute('id', `${x}-${y}`);
             currBox.appendChild(image);
 
             for (let i = x-1; i < x+2; i++) {
@@ -50,6 +51,7 @@ function makeMove(x,y){
             }
         }
     }
+    
     return
 }
 
@@ -106,9 +108,7 @@ for (let i = 0; i < 9; i++) {
         box.appendChild(image);
 
         box.addEventListener("click", (e) =>{
-            const [x,y] = [Number(e.target.id[0]),Number(e.target.id[2])]
-            console.log(`Clicked on box at (${x}, ${y})`); 
-            makeMove(x, y);
+            makeMove(Number(e.target.id[0]), Number(e.target.id[2]));
         })
 
         board.appendChild(box);
@@ -125,5 +125,6 @@ function setMines() {
 
     }
 }
+
 
 setMines()

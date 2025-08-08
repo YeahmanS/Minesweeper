@@ -1,129 +1,103 @@
-const board = document.getElementById('board');
-const gameMatrix = Array.from({ length: 9 }, () => Array(9).fill(null));
+document.addEventListener('DOMContentLoaded', () => {
+  const SIZE = 9;
+  const NUM_MINES = 10;
+  const board = document.getElementById('board');
 
-// Safely place 10 mines without duplicates
-function setMines() {
-    let minesPlaced = 0;
-    while (minesPlaced < 10) {
-        const x = Math.floor(Math.random() * 9);
-        const y = Math.floor(Math.random() * 9);
-        if (gameMatrix[x][y] !== "M") {
-            gameMatrix[x][y] = "M";
-            minesPlaced++;
-        }
+  // Helper: get box by coordinates
+  function getBox(x, y) {
+    return document.querySelector(`.box[data-x='${x}'][data-y='${y}']`);
+  }
+
+  // Place mines randomly
+  function setMines() {
+    let placed = 0;
+    while (placed < NUM_MINES) {
+      const x = Math.floor(Math.random() * SIZE);
+      const y = Math.floor(Math.random() * SIZE);
+      const box = getBox(x, y);
+      if (box.dataset.state !== 'M') {
+        box.dataset.state = 'M';
+        placed++;
+      }
     }
-}
+  }
 
-function checkMines(x, y) {
-    let numMines = 0;
-
+  // Count adjacent mines
+  function countMines(x, y) {
+    let count = 0;
     for (let i = x - 1; i <= x + 1; i++) {
-        for (let j = y - 1; j <= y + 1; j++) {
-            if ((i >= 0 && i < 9) && (j >= 0 && j < 9)) {
-                if (gameMatrix[i][j] === "M") {
-                    numMines++;
-                }
-            }
+      for (let j = y - 1; j <= y + 1; j++) {
+        if (i >= 0 && i < SIZE && j >= 0 && j < SIZE) {
+          if (getBox(i, j).dataset.state === 'M') count++;
         }
+      }
     }
+    return count;
+  }
 
-    return numMines;
-}
-
-function revealAllMines() {
-    for (let x = 0; x < 9; x++) {
-        for (let y = 0; y < 9; y++) {
-            if (gameMatrix[x][y] === "M") {
-                const currBox = document.getElementById(`${x}-${y}-d`);
-                currBox.innerHTML = ''; // Safer than removeChild
-                const image = document.createElement('img');
-                image.src = 'assests/TileMine.png';
-                image.width = image.height = "100%";
-                image.id = `${x}-${y}`;
-                currBox.appendChild(image);
-            }
+  // Reveal all mines on loss
+  function revealAllMines() {
+    for (let x = 0; x < SIZE; x++) {
+      for (let y = 0; y < SIZE; y++) {
+        const box = getBox(x, y);
+        if (box.dataset.state === 'M') {
+          showTile(box, 'assests/TileMine.png');
         }
+      }
     }
-}
+  }
 
-function makeMove(x, y) {
-    if (gameMatrix[x][y] !== null && gameMatrix[x][y] !== "M") {
-        // Already revealed
-        return;
-    }
+  // Display a tile image
+  function showTile(box, src) {
+    box.innerHTML = '';
+    const img = document.createElement('img');
+    img.src = src;
+    box.appendChild(img);
+  }
 
-    const currBox = document.getElementById(`${x}-${y}-d`);
-    currBox.innerHTML = ''; // Clear safely
+  // Handle a click move
+  function makeMove(x, y) {
+    const box = getBox(x, y);
+    if (box.classList.contains('revealed')) return;
+    box.classList.add('revealed');
 
-    if (gameMatrix[x][y] === "M") {
-        revealAllMines();
-        const image = document.createElement('img');
-        image.src = 'assests/TileExploded.png';
-        image.width = image.height = "100%";
-        image.id = `${x}-${y}`;
-        currBox.appendChild(image);
-        return;
-    }
-
-    const numberOfMines = checkMines(x, y);
-
-    if (numberOfMines > 0) {
-        const image = document.createElement('img');
-        image.src = `assests/Tile${numberOfMines}.png`;
-        image.width = image.height = "100%";
-        image.id = `${x}-${y}`;
-        currBox.appendChild(image);
-        gameMatrix[x][y] = numberOfMines;
+    if (box.dataset.state === 'M') {
+      revealAllMines();
+      showTile(box, 'assests/TileExploded.png');
     } else {
-        const image = document.createElement('img');
-        image.src = 'assests/TileEmpty.png';
-        image.width = image.height = "100%";
-        image.id = `${x}-${y}`;
-        currBox.appendChild(image);
-        gameMatrix[x][y] = 0;
-
-        // Recursively click neighbors
+      const num = countMines(x, y);
+      if (num > 0) {
+        box.dataset.state = num;
+        showTile(box, `assests/Tile${num}.png`);
+      } else {
+        showTile(box, 'assests/TileEmpty.png');
+        // Flood-fill neighbors
         for (let i = x - 1; i <= x + 1; i++) {
-            for (let j = y - 1; j <= y + 1; j++) {
-                if (i >= 0 && i < 9 && j >= 0 && j < 9 && !(i === x && j === y)) {
-                    if (gameMatrix[i][j] === null) {
-                        makeMove(i, j);
-                    }
-                }
+          for (let j = y - 1; j <= y + 1; j++) {
+            if (i >= 0 && i < SIZE && j >= 0 && j < SIZE) {
+              makeMove(i, j);
             }
+          }
         }
+      }
     }
-}
+  }
 
-// Render board
-for (let i = 0; i < 9; i++) {
-    for (let j = 0; j < 9; j++) {
-        const box = document.createElement('div');
-        const image = document.createElement('img');
-
-        image.src = 'assests/TileUnknown.png';
-        image.width = image.height = "100%";
-        image.id = `${i}-${j}`;
-
-        box.classList.add('box');
-        box.id = `${i}-${j}-d`;
-        box.appendChild(image);
-
-        box.addEventListener("click", (e) => {
-            // Use closest image element to get proper ID
-            const target = e.target.tagName === "IMG" ? e.target : e.target.querySelector("img");
-            if (!target) return;
-
-            const [xStr, yStr] = target.id.split("-");
-            const x = parseInt(xStr, 10);
-            const y = parseInt(yStr, 10);
-
-            makeMove(x, y);
-        });
-
-        board.appendChild(box);
-        
+  // Build the board grid
+  for (let i = 0; i < SIZE; i++) {
+    for (let j = 0; j < SIZE; j++) {
+      const box = document.createElement('div');
+      box.className = 'box';
+      box.dataset.x = i;
+      box.dataset.y = j;
+      box.dataset.state = '';
+      const img = document.createElement('img');
+      img.src = 'assests/TileUnknown.png';
+      box.appendChild(img);
+      box.addEventListener('click', () => makeMove(i, j));
+      board.appendChild(box);
     }
-}
+  }
 
-setMines();
+  setMines();
+});
