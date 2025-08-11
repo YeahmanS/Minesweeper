@@ -3,41 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minesweeper</title>
+    <title>Mine</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="main">
-        <div id="window">
-            <nav>
-                <div id="navbar-left"><span>Minesweeper</span></div>
-                <div id="navbar-right">
-                    <button>_</button>
-                    <button>[]</button>
-                    <button>x</button>
-                </div>
-            </nav>
-            <article>
-                <span>Game</span>
-                <span>Help</span>
-            </article>
-            <main>
-                <div id="score-board">Score
-                    <div id="flag">
-                        10
-                    </div>
-                    <button id="gameState">
-                        smiley
-                    </button>
-                </div>
-                <div id="game-board">
-                    <div id="board">
-                        
-                    </div>
-                </div>
-            </main>
+    <div id="window">
+        <div id="bar">
+            <div id="bar-left">
+                <img src="assests/TileMine.png" alt="Mine Logo">
+                <span id="window-text">Minesweeper</span>
+            </div>
+            <div id="bar-right">
+                <div id="close-button">x</div>
+            </div>
+        </div>
+        <div id="game-bar">
+            <span>Game</span>
+            <a href="https://minesweepergame.com/strategy/how-to-play-minesweeper.php" target="_blank" id="Help" >Help</a>
+        </div>
+        <div id="game-board">
+            <div id="score-board">
+                <div id="flag-count">010</div>                
+                <button class="pressed" id="game-state" >
+                    <img width="20" height="20" src="assests/running.png" alt="happy"/>
+                </button>
+                <div id="time">000</div>
+            </div>
+            <div id="board">
+                <!-- Game board will be generated here -->
+            </div>
+
         </div>
     </div>
-    <script src="script.js"> </script>
+
+    <script src="script.js"></script>
 </body>
 </html>
