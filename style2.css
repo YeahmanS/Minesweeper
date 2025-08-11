@@ -3,6 +3,11 @@
   src: url(assests/DS-DIGIB.TTF);
 }
 
+@font-face {
+    font-family: Classic;
+    src: url("/assests/C&C\ Red\ Alert\ [LAN].ttf");
+}
+
 body{
     margin: 0;
     padding: 0;
@@ -41,6 +46,7 @@ body{
     align-items: center;
     margin: 0px;
     padding-right: 4px;
+    font-family: Classic;
 }
 
 #bar-left{
@@ -57,7 +63,17 @@ body{
 
 #window-text{
     color: white;
+    font-weight: 400;
+}
+
+#Help{
+    text-decoration: none;
     font-weight: 500;
+    color: black
+}
+
+#Help:hover{
+    text-decoration: underline;
 }
 
 #close-button{
@@ -87,6 +103,7 @@ body{
     justify-content: flex-start;
     gap: 10px;
     align-items: center;
+    font-family: Classic;
 }
 
 #game-board{

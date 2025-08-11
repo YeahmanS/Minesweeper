@@ -28,6 +28,7 @@ function makeMove(x,y){
             currBox.appendChild(image);
 
         } else {
+            gameMatrix[x][y] === "B" ;
             const currBox = document.getElementById(`${x}-${y}-d`);
             currBox.removeChild(currBox.firstChild);
             const image = document.createElement('img');
@@ -40,8 +41,8 @@ function makeMove(x,y){
             for (let i = x-1; i < x+2; i++) {
                 for (let j = y-1; j < y+2; j++) {
                     if ((i>=0 && i<9) && (j>=0 && j<9)){
-                        const currBox = document.getElementById(`${i}-${j}-d`);
-                        if (gameMatrix[i][j] === null ){
+                        if (gameMatrix[i][j] !== "B" ){
+                            const currBox = document.getElementById(`${i}-${j}-d`);
                             currBox.click();
                         }
                     }
